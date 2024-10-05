@@ -2,12 +2,14 @@ const projects = [
   {
     title: "ChatBot con Inteligencia Atrificial",
     description: "ChatBot con Inteligencia Atrificial",
-    image: "https://via.placeholder.com/150",
+    image: "/chatBot.webp",
+    href: "/chatbot"
   },
   {
     title: "Banderas del Mundo",
     description: "Banderas del Mundo",
-    image: "https://via.placeholder.com/150",
+    image: "/world.jpeg",
+    href: "/flags"
   },
 ];
 

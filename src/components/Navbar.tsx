@@ -25,7 +25,7 @@ const Navbar: FC = () => {
     >
       <div className="container mx-auto p-4">
         <Link href="/" className="text-2xl font-bold">
-          Mi Portfolio
+        Cosas sueltas <span className="text-xs"> by Adolfo</span>
         </Link>
       </div>
     </nav>
