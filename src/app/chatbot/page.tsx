@@ -14,7 +14,6 @@ const ChatBotPage: NextPage = () => {
   const recordController = useRef(new AbortController());
 
   useEffect(() => {
-    console.log(window);
     if (window) {
       const isBrowserCompatible = 'webkitSpeechRecognition' in window;
       setIsBrowserCompatible(isBrowserCompatible);
