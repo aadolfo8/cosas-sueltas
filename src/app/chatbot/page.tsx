@@ -4,17 +4,20 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextPage } from 'next';
 import { useRef, useState } from 'react';
 
-const isBrowserCompatible = 'webkitSpeechRecognition' in window;
-
+let isBrowserCompatible = false;
 let recognition: null | SpeechRecognition = null;
 let synth: null | SpeechSynthesis = null;
 
-if (isBrowserCompatible) {
-  recognition = new window.webkitSpeechRecognition();
-  recognition.continuous = false;
-  recognition.lang = 'es-ES';
+if (typeof window !== 'undefined') {
+  const isBrowserCompatible = 'webkitSpeechRecognition' in window;
 
-  synth = window.speechSynthesis;
+  if (isBrowserCompatible) {
+    recognition = new window.webkitSpeechRecognition();
+    recognition.continuous = false;
+    recognition.lang = 'es-ES';
+
+    synth = window.speechSynthesis;
+  }
 }
 
 const ChatBotPage: NextPage = () => {
@@ -53,41 +56,44 @@ const ChatBotPage: NextPage = () => {
     setIsRecording(false);
     const genAI = new GoogleGenerativeAI('AIzaSyA-pn12v5iWHQG_3j2ht7BX4nHV6Ez1who');
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
-  
+
     recognition?.stop();
     recordController.current.abort();
-  
+
     // Usar el buffer en lugar de un prompt fijo
-    const userMessage = buffer || "donde puedo encotnrar urracas en españa";
-  
+    const userMessage = buffer || 'donde puedo encotnrar urracas en españa';
+
     // Actualizar el chatHistory con el mensaje del usuario
     const chat = model.startChat({
       history: [
         {
-          role: "user",
-          parts: [{ text:  `
+          role: 'user',
+          parts: [
+            {
+              text: `
             Eres un asistente virtual amigable y servicial. Tu tarea es ayudar al usuario con sus preguntas y solicitudes de manera clara y concisa. 
             * Quiero que la respuesta sea lo más natural posible, pero también quiero que sea precisa y relevante.
             * Que la respuesta sea siempre en español
             * Si no entiendes la pregunta, puedes pedirle al usuario que la reformule.
             * Si no puedes responder a la pregunta, puedes decirle al usuario que no tienes la respuesta.
-          `}],
-        },
-      ],
+          `
+            }
+          ]
+        }
+      ]
     });
-    
- 
+
     try {
       let responseText = await chat.sendMessage(userMessage);
-      responseText.response.text()
+      responseText.response.text();
       // Sintetizar la respuesta en voz
       const utterance = new SpeechSynthesisUtterance(responseText.response.text());
       utterance.lang = 'es-ES';
       synth?.speak(utterance);
     } catch (error) {
-      console.error("Error al generar contenido:", error);
+      console.error('Error al generar contenido:', error);
     }
-  
+
     // Limpiar el buffer después de usarlo
     setBuffer('');
   };
