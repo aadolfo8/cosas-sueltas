@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import ScrollToTop from "@/components/ScrollToTop";
+import Head from "next/head";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -12,11 +14,16 @@ export const metadata: Metadata = {
 const RootLayout = ({children}: {children: React.ReactNode}) => {
   return (
     <html lang="en">
+      <Head> 
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Lato&display=swap" rel="stylesheet" />
+
+      </Head>
       <body className="flex flex-col min-h-screen bg-gray-900 text-white">
         <Navbar />
         <main className="flex-grow container mx-auto px-4 py-24">
           {children}
         </main>
+        <ScrollToTop/>
         <Footer />
       </body>
     </html>
