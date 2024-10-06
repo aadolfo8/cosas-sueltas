@@ -2,29 +2,33 @@
 
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { NextPage } from 'next';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-let isBrowserCompatible = false;
 let recognition: null | SpeechRecognition = null;
 let synth: null | SpeechSynthesis = null;
-
-if (typeof window !== 'undefined') {
-  const isBrowserCompatible = 'webkitSpeechRecognition' in window;
-
-  if (isBrowserCompatible) {
-    recognition = new window.webkitSpeechRecognition();
-    recognition.continuous = false;
-    recognition.lang = 'es-ES';
-
-    synth = window.speechSynthesis;
-  }
-}
 
 const ChatBotPage: NextPage = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [buffer, setBuffer] = useState('');
-
+  const [isBrowserCompatible, setIsBrowserCompatible] = useState(false);
   const recordController = useRef(new AbortController());
+
+  useEffect(() => {
+    console.log(window);
+    if (window) {
+      const isBrowserCompatible = 'webkitSpeechRecognition' in window;
+      setIsBrowserCompatible(isBrowserCompatible);
+
+      if (isBrowserCompatible) {
+        recognition = new window.webkitSpeechRecognition();
+        recognition.continuous = false;
+        recognition.lang = 'es-ES';
+
+        synth = window.speechSynthesis;
+      }
+    }
+  }, []);
+
 
   const handleStartRecording = () => {
     synth?.cancel();
@@ -53,6 +57,8 @@ const ChatBotPage: NextPage = () => {
   };
 
   const handleStopRecording = async () => {
+    console.log(buffer)
+    
     setIsRecording(false);
     const genAI = new GoogleGenerativeAI('AIzaSyA-pn12v5iWHQG_3j2ht7BX4nHV6Ez1who');
     const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
@@ -86,6 +92,7 @@ const ChatBotPage: NextPage = () => {
     try {
       let responseText = await chat.sendMessage(userMessage);
       responseText.response.text();
+      console.log("🚀 ~ handleStopRecording ~ responseText.response.text();:", responseText.response.text())
       // Sintetizar la respuesta en voz
       const utterance = new SpeechSynthesisUtterance(responseText.response.text());
       utterance.lang = 'es-ES';
