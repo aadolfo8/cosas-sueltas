@@ -52,7 +52,7 @@ const ChatIAPage: NextPage = () => {
     setLoading(true);
 
     const genAI = new GoogleGenerativeAI('AIzaSyA-pn12v5iWHQG_3j2ht7BX4nHV6Ez1who');
-    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
 
     const chatHistory: {
       role: 'user' | 'model';

@@ -17,6 +17,12 @@ const projects = [
     image: "/chatBot.webp",
     href: "/chatia"
   },
+  {
+    title: "I Love PDF",
+    description: "I Love PDF",
+    image: "/pdf.jpg",
+    href: "/pdf"
+  },
 ];
 
 export default projects;

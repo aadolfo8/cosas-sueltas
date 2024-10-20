@@ -15,9 +15,13 @@ const FlagsClientPage: NextPage<FlagsClientPageProps> = ({ countries }) => {
 
   useEffect(() => {
     setFilteredCountries(
-      countries.filter((country) =>
-        country.name.common.toLowerCase().includes(search.toLowerCase())
-      )
+      countries.filter((country) => {
+        if (country.translations?.spa?.common) {
+          return country.translations?.spa?.common.toLowerCase().includes(search.toLowerCase());
+        } else {
+          return country.name.common.toLowerCase().includes(search.toLowerCase());
+        }
+      })
     );
   }, [search, countries]);
 
@@ -30,7 +34,7 @@ const FlagsClientPage: NextPage<FlagsClientPageProps> = ({ countries }) => {
           setSearch(e.target.value);
         }}
       />
-      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-8">
+      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-8 auto-rows-fr">
         {filteredCountries.map((country) => (
           <CountryCard key={country.cca3} country={country} />
         ))}
